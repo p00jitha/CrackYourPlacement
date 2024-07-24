@@ -1,44 +1,31 @@
-class Solution{
-public:
-    int fun(int N,int arr[],int k,vector<vector<int>>&dp)
+int fun(int w,int wt[],int val[],int n,vector<vector<int>>&dp)
     {
-        if(k==0)
+        if(n==0)
         {
-            return 1;
+            if(wt[0]<=w)
+            {
+                return val[0];
+            }
+            else
+            {
+                return 0;
+            }
         }
-        if(N==0)
+        if(dp[n][w]!=-1)
         {
-            return arr[0]==k;
+            return dp[n][w];
         }
-        if(dp[N][k]!=-1)
+        int take=INT_MIN,notake;
+        notake=0+fun(w,wt,val,n-1,dp);
+        if(wt[n]<=w)
         {
-            return dp[N][k];
+            take=val[n]+fun(w-wt[n],wt,val,n-1,dp);
         }
-        int take=0;
-        if(k>=arr[N])
-        {
-         take=fun(N-1,arr,k-arr[N],dp);
-        }
-        int notake=fun(N-1,arr,k,dp);
-        dp[N][k]= take||notake;
-        return dp[N][k];
+        dp[n][w]=max(take,notake);
+        return dp[n][w];
     }
-    int equalPartition(int N, int arr[])
-    {
-        int s=0;
-        for(int i=0;i<N;i++)
-        {
-            s=s+arr[i];
-        }
-        int m=s/2;
-        if(s%2)
-        {
-            return 0;
-        }
-        else
-        {
-            vector<vector<int>>dp(N,vector<int>(m+1,-1));
-            return fun(N-1,arr,m,dp);
-        }
+    int knapSack(int w, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>>dp(n,vector<int>(w+1,-1));
+       return fun(w,wt,val,n-1,dp);
     }
-};
